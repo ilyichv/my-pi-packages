@@ -9,15 +9,20 @@ import {
 } from "node:fs";
 import { dirname, resolve } from "node:path";
 
-const emptyStore = () => ({ version: 1, projects: {} });
-
-export const normalizeCommand = (command) => command.trim();
-
-export function canRememberCommand(command) {
-	return !/[\r\n;&|<>`$*?\[\]{}()]/.test(command);
+export interface ApprovalStore {
+	version: 1;
+	projects: Record<string, string[]>;
 }
 
-export function cwdKey(cwd) {
+const emptyStore = (): ApprovalStore => ({ version: 1, projects: {} });
+
+export const normalizeCommand = (command: string): string => command.trim();
+
+export function canRememberCommand(command: string): boolean {
+	return !/[\r\n;&|<>`$*?[\]{}()]/.test(command);
+}
+
+export function cwdKey(cwd: string): string {
 	try {
 		return realpathSync.native(cwd);
 	} catch {
@@ -25,17 +30,18 @@ export function cwdKey(cwd) {
 	}
 }
 
-export function parseStore(raw) {
-	const value = JSON.parse(raw);
-	if (!value || typeof value !== "object" || value.version !== 1) {
+export function parseStore(raw: string): ApprovalStore {
+	const value: unknown = JSON.parse(raw);
+	if (!value || typeof value !== "object" || (value as ApprovalStore).version !== 1) {
 		throw new Error("Invalid approval store");
 	}
-	if (!value.projects || typeof value.projects !== "object" || Array.isArray(value.projects)) {
+	const { projects: rawProjects } = value as { projects?: unknown };
+	if (!rawProjects || typeof rawProjects !== "object" || Array.isArray(rawProjects)) {
 		throw new Error("Invalid approval projects");
 	}
 
-	const projects = {};
-	for (const [cwd, commands] of Object.entries(value.projects)) {
+	const projects: Record<string, string[]> = {};
+	for (const [cwd, commands] of Object.entries(rawProjects as Record<string, unknown>)) {
 		if (!Array.isArray(commands) || !commands.every((command) => typeof command === "string")) {
 			throw new Error(`Invalid approvals for ${cwd}`);
 		}
@@ -44,11 +50,11 @@ export function parseStore(raw) {
 	return { version: 1, projects };
 }
 
-function readStore(path) {
+function readStore(path: string): ApprovalStore {
 	return existsSync(path) ? parseStore(readFileSync(path, "utf8")) : emptyStore();
 }
 
-function writeStore(path, store) {
+function writeStore(path: string, store: ApprovalStore): void {
 	mkdirSync(dirname(path), { recursive: true });
 	const temporaryPath = `${path}.${process.pid}.tmp`;
 	try {
@@ -67,11 +73,11 @@ function writeStore(path, store) {
 	}
 }
 
-export function loadApprovals(path, cwd) {
+export function loadApprovals(path: string, cwd: string): Set<string> {
 	return new Set(readStore(path).projects[cwdKey(cwd)] ?? []);
 }
 
-export function purgeApprovals(path, shouldPurge) {
+export function purgeApprovals(path: string, shouldPurge: (command: string) => boolean): void {
 	const store = readStore(path);
 	let changed = false;
 	for (const [key, commands] of Object.entries(store.projects)) {
@@ -85,7 +91,7 @@ export function purgeApprovals(path, shouldPurge) {
 	writeStore(path, store);
 }
 
-export function persistApproval(path, cwd, command) {
+export function persistApproval(path: string, cwd: string, command: string): void {
 	// ponytail: simultaneous Pi processes can lose one new approval; add file locking if that becomes common.
 	const store = readStore(path);
 	const key = cwdKey(cwd);
@@ -93,13 +99,13 @@ export function persistApproval(path, cwd, command) {
 	writeStore(path, store);
 }
 
-export function clearApprovals(path, cwd) {
+export function clearApprovals(path: string, cwd: string): void {
 	const store = readStore(path);
 	delete store.projects[cwdKey(cwd)];
 	writeStore(path, store);
 }
 
-export function targetsPath(path, cwd, candidatePath) {
+export function targetsPath(path: string, cwd: string, candidatePath: string): boolean {
 	const candidate = resolve(cwd, candidatePath);
 	const expected = resolve(path);
 	if (candidate === expected) return true;

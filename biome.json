@@ -1,0 +1,30 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.4.8/schema.json",
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab",
+		"lineWidth": 110
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "double"
+		}
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"style": {
+				"recommended": false
+			}
+		}
+	},
+	"files": {
+		"includes": [
+			"packages/*/extensions/**/*.ts",
+			"packages/*/lib/**/*.ts",
+			"packages/*/test/**/*.ts",
+			"packages/*/*.ts"
+		]
+	}
+}

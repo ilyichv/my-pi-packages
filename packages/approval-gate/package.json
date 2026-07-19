@@ -1,21 +1,22 @@
 {
-  "name": "pi-approval-gate",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "description": "Per-working-directory command approvals for Pi",
-  "keywords": [
-    "pi-package"
-  ],
-  "scripts": {
-    "test": "node --test"
-  },
-  "peerDependencies": {
-    "@earendil-works/pi-coding-agent": "*"
-  },
-  "pi": {
-    "extensions": [
-      "./extensions/approval-gate.js"
-    ]
-  }
+	"name": "@ilyichv/pi-approval-gate",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"description": "Per-working-directory command approvals for Pi",
+	"keywords": [
+		"pi-package"
+	],
+	"scripts": {
+		"test": "vitest run",
+		"typecheck": "tsc --noEmit"
+	},
+	"peerDependencies": {
+		"@earendil-works/pi-coding-agent": "*"
+	},
+	"pi": {
+		"extensions": [
+			"./extensions/approval-gate.ts"
+		]
+	}
 }

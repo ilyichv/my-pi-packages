@@ -1,0 +1,24 @@
+{
+	"name": "@ilyichv/my-pi-packages",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"description": "Monorepo for my Pi coding agent packages",
+	"workspaces": [
+		"packages/*"
+	],
+	"scripts": {
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"typecheck": "npm run typecheck --workspaces --if-present",
+		"lint": "biome check packages/",
+		"lint:fix": "biome check --fix packages/"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.4.14",
+		"@earendil-works/pi-coding-agent": "^0.80.7",
+		"@types/node": "^24.12.4",
+		"typescript": "^5.9.3",
+		"vitest": "^4.0.18"
+	}
+}

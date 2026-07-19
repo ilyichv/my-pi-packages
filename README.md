@@ -20,6 +20,18 @@ See each package's README for configuration and usage.
 
 ## Development
 
+This is an npm workspaces monorepo. Install once from the repository root:
+
 ```sh
-npm test --prefix packages/approval-gate
+npm install
 ```
+
+Then run the shared tooling across every package:
+
+```sh
+npm test        # vitest
+npm run lint    # biome
+npm run typecheck
+```
+
+Scope a run to one package with `npm test -w @ilyichv/pi-approval-gate`.
