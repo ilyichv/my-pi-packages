@@ -7,6 +7,7 @@ A monorepo for my [Pi coding agent](https://github.com/earendil-works/pi) packag
 | Package | Description |
 | --- | --- |
 | [Approval Gate](./packages/approval-gate) | Adds command approvals, allowlists, and quarantine rules. |
+| [Subagents](./packages/subagents) | Runs named coding agents in isolated Pi processes. |
 
 ## Install
 

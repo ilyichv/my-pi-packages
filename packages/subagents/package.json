@@ -1,0 +1,24 @@
+{
+	"name": "@ilyichv/pi-subagents",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"description": "Callable isolated subagents for Pi",
+	"keywords": [
+		"pi-package"
+	],
+	"scripts": {
+		"test": "vitest run",
+		"typecheck": "tsc --noEmit"
+	},
+	"peerDependencies": {
+		"@earendil-works/pi-coding-agent": "*",
+		"@earendil-works/pi-tui": "*",
+		"typebox": "*"
+	},
+	"pi": {
+		"extensions": [
+			"./extensions/subagent.ts"
+		]
+	}
+}
